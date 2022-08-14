@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 import csv
 
+
 route53 = boto3.client('route53')
 s3 = boto3.client('s3')
 
@@ -41,20 +42,18 @@ def write_to_csv(zone, zone_records):
            
     return zone_file_name
   
-
-#def lambda_handler(event, context):
-time_stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ",
-    datetime.utcnow().utctimetuple()
-)
-hosted_zones = get_hosted_zones()
-for zone in hosted_zones:
-    zone_folder = (time_stamp + 'route53-hostesd-zones')
-    zone_records = get_records(zone['Id'])
-    text_file = write_to_csv(zone, zone_records)
-    upload_to_s3(
-        zone_folder,
-        write_to_csv(zone, zone_records),
-        s3_bucket_name,
-        (zone['Name'] + 'csv')
-    )
-        
+def lambda_handler(event, context):
+	time_stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ",
+	datetime.utcnow().utctimetuple()	)
+	hosted_zones = get_hosted_zones()
+	for zone in hosted_zones:
+	    zone_folder = (time_stamp + 'route53-hostesd-zones')
+	    zone_records = get_records(zone['Id'])
+	    text_file = write_to_csv(zone, zone_records)
+	    upload_to_s3(
+	        zone_folder,
+	        write_to_csv(zone, zone_records),
+	        s3_bucket_name,
+	        (zone['Name'] + 'csv')
+	    )
+	        
